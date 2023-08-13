@@ -22,10 +22,20 @@ streamlit.text(fruityvice_response.json())
 fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
 # write your own comment - what does this do?
 streamlit.dataframe(fruityvice_normalized)
-my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
-my_cur = my_cnx.cursor()
-my_cur.execute("select * from pc_rivery_db.public.fruit_load_list")
-my_data_rows = my_cur.fetchall()
-streamlit.header("The fruit load list contains :")
-streamlit.dataframe(my_data_rows)
-my_cur.execute("insert into fruit_load_list values('from streamlit')")
+# my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+# my_cur = my_cnx.cursor()
+# my_cur.execute("select * from pc_rivery_db.public.fruit_load_list")
+# my_data_rows = my_cur.fetchall()
+# streamlit.header("The fruit load list contains :")
+# streamlit.dataframe(my_data_rows)
+# my_cur.execute("insert into fruit_load_list values('from streamlit')")
+
+def insert_row_snowflake(new fruit):
+  with my_cnx.cursor() as my_cur:
+    my_cur.execute("insert into fruit_load_list values('from streamlit')")
+    return "Thanks for adding " + new_fruit
+add_my_fruit = streamlit.text_input('What fruit would you like to have?')
+if streamlit.button('Add a fruit to the list'):
+  my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
+  back_from_function = insert_row_snowflake(add_my_fruit)
+  streamlit.text(back_from_function)
